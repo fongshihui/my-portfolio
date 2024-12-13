@@ -11,7 +11,7 @@ export default function App() {
     return (
         <div className="min-h-screen bg-gradient-to-b from-pink-100 to-purple-100 text-gray-800">
             <Header />
-            <nav className="bg-white shadow-md py-4">
+            <nav className="shadow-md py-4">
                 <div className="container mx-auto px-4 flex justify-center space-x-4">
                     <button
                         onClick={() => setActiveSection("about")}

@@ -17,15 +17,7 @@ const projects = [
         link: "https://voyager-bay-six.vercel.app/",
         icon: "🏖️",
     },
-    {
-        id: 3,
-        name: "Pastel Weather Dashboard",
-        description:
-            "Check the weather in style with this pastel-themed, charming weather app.",
-        image: "/placeholder.svg?height=200&width=300",
-        link: "https://github.com/shihui/pastel-weather-dashboard",
-        icon: "🌈",
-    },
+   
 ];
 
 export default projects;
