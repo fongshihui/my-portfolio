@@ -1,4 +1,15 @@
 export const experiences = [
+{
+    title: "Software Engineer Intern",
+    company: "Accenture",
+    period: "May 2025 - Aug 2025",
+    description: [
+      "Conducted code quality checks and security reviews as part of the testing lifecycle.",
+      "Validated scheduled batch jobs and background processes for reliability and accuracy.",
+      "Performed User Acceptance Testing (UAT) to ensure the application met business requirements.",
+    ],
+  },
+
     {
         title: "Data Analyst Intern",
         company: "Shopee",
@@ -24,13 +35,5 @@ export const experiences = [
         description: [
             "Contributed to go-to-market strategies, improved UI/UX with CSS and React, and conducted error testing and user feedback sessions for Typeless' product, Unifie.",
         ],
-    },
-    {
-        title: "Business Development Intern",
-        company: "Techfin Consulting",
-        period: "May 2024 - July 2024",
-        description: [
-            "Conducted market research and engaged with clients to foster relationships and support business growth.",
-        ],
-    },
+    }
 ];
