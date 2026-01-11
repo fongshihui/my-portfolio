@@ -9,11 +9,11 @@ export default function Skills() {
                 About Me
             </h2>
             <p className="text-xl leading-relaxed text-center text-gray-700 mb-12">
-                Hi! I'm Shi Hui, a Year 2 Information Systems student from Singapore
-                Management University (SMU), with a strong interest in Web
-                development and Data analysis. I am
-                passionate about creating seamless user experiences and
-                utilizing data-driven solutions to solve real-world problems. Connect with me for a coffee chat!
+                Hi! I'm Shi Hui, a Year 3 Information Systems student from Singapore
+                Management University (SMU), with a strong interest in software
+                development. I am
+                passionate about learning new technologies and
+                utilizing tech to solve problems. Connect with me for a coffee chat!
             </p>
 
             {/* Experiences Section */}
