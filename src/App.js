@@ -3,10 +3,23 @@ import Header from "./components/Header";
 import Skills from "./components/Skills";
 import Projects from "./components/Projects";
 import ContactForm from "./components/ContactForm";
+import { trackPageView, trackEvent } from "./utils/analytics";
+
 import "./App.css";
 
 export default function App() {
     const [activeSection, setActiveSection] = useState("about");
+    useEffect(() => {
+        trackPageView(activeSection);
+    }, [activeSection]);
+
+    const handleNavClick = (section) => {
+        trackEvent("nav_click", {
+            section,
+            source: "top_nav",
+        });
+        setActiveSection(section);
+    };
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-pink-100 to-purple-100 text-gray-800">
@@ -14,7 +27,7 @@ export default function App() {
             <nav className="shadow-md py-4">
                 <div className="container mx-auto px-4 flex justify-center space-x-4">
                     <button
-                        onClick={() => setActiveSection("about")}
+                        onClick={() => handleNavClick("about")}
                         className={`px-6 py-2 text-lg font-semibold rounded-full ${
                             activeSection === "about"
                                 ? "bg-pink-400 text-white"
@@ -24,7 +37,7 @@ export default function App() {
                         About
                     </button>
                     <button
-                        onClick={() => setActiveSection("projects")}
+                        onClick={() => handleNavClick("projects")}
                         className={`px-6 py-2 text-lg font-semibold rounded-full ${
                             activeSection === "projects"
                                 ? "bg-pink-400 text-white"
@@ -34,7 +47,7 @@ export default function App() {
                         Projects
                     </button>
                     <button
-                        onClick={() => setActiveSection("contact")}
+                        onClick={() => handleNavClick("contact")}
                         className={`px-6 py-2 text-lg font-semibold rounded-full ${
                             activeSection === "contact"
                                 ? "bg-pink-400 text-white"
