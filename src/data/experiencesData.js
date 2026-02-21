@@ -1,5 +1,17 @@
 export const experiences = [
   {
+    title: "Backend Software Engineer Intern",
+    company: "TikTok Search Recommendation",
+    period: "Feb 2026 – May 2026",
+    description: [
+      "Designed and implemented backend services to support ranking and retrieval workflows for search recommendation features.",
+      "Built and optimized APIs for internal service-to-service communication with a focus on performance and reliability.",
+      "Partnered with product and data teams to convert recommendation requirements into production-ready backend solutions.",
+      "Improved observability with structured logging and monitoring to speed up debugging and incident response.",
+      "Technologies used: Golang, Java, Spring Boot, SQL, REST APIs, Distributed Systems.",
+    ],
+  },
+  {
     title: "Software Engineer in Test Intern",
     company: "TikTok LIVE – Money Platform Team",
     period: "Aug 2025 – Dec 2025",

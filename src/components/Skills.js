@@ -9,16 +9,16 @@ export default function Skills() {
                 About Me
             </h2>
             <p className="text-xl leading-relaxed text-center text-gray-700 mb-12">
-                Hi! I'm Shi Hui, a Year 3 Information Systems student from Singapore
-                Management University (SMU), with a strong interest in software
-                development. I am
-                passionate about learning new technologies and
-                utilizing tech to solve problems. Connect with me for a coffee chat!
+                I am Shi Hui, a Year 3 Information Systems undergraduate at
+                Singapore Management University (SMU), with a strong interest in
+                backend engineering and scalable software systems. I enjoy solving
+                practical problems with clean architecture, reliable APIs, and
+                measurable product impact.
             </p>
 
             {/* Experiences Section */}
             <h3 className="text-4xl font-bold text-center bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent mt-16 mb-8">
-                My Experiences
+                Professional Experience
             </h3>
             <div className="space-y-8">
                 {experiences.map((experience, index) => (

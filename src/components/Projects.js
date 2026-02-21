@@ -6,7 +6,7 @@ export default function Projects() {
     return (
         <section className="mb-16">
             <h2 className="text-4xl font-bold text-center text-purple-500 mb-8">
-                My Projects 🎨
+                Selected Projects
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {projects.map((project) => (
@@ -38,7 +38,7 @@ export default function Projects() {
                                 rel="noopener noreferrer"
                                 className="inline-block bg-purple-400 text-white rounded-full px-6 py-3 hover:bg-purple-500 transition-colors duration-300 text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-purple-300"
                             >
-                                View Project
+                                View Details
                             </a>
                         </div>
                     </motion.div>
