@@ -1,10 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import confetti from "canvas-confetti";
 
 export default function Header() {
     const [typedName, setTypedName] = useState("");
     const name = "Shi Hui";
+    const bubbles = useMemo(
+        () =>
+            [...Array(50)].map(() => ({
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+                size: `${Math.random() * 20 + 10}px`,
+                duration: `${Math.random() * 10 + 5}s`,
+            })),
+        []
+    );
 
     useEffect(() => {
         const typeWriter = (text, i = 0) => {
@@ -23,29 +33,29 @@ export default function Header() {
     }, []);
 
     return (
-        <header className="py-12 px-4 text-center relative overflow-hidden">
+        <header className="py-14 px-4 text-center relative overflow-hidden">
             <motion.div
                 className="absolute inset-0 z-0"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 2 }}
             >
-                {[...Array(50)].map((_, i) => (
+                {bubbles.map((bubble, i) => (
                     <div
                         key={i}
                         className="absolute rounded-full bg-pink-200 opacity-50"
                         style={{
-                            top: `${Math.random() * 100}%`,
-                            left: `${Math.random() * 100}%`,
-                            width: `${Math.random() * 20 + 10}px`,
-                            height: `${Math.random() * 20 + 10}px`,
-                            animation: `float ${Math.random() * 10 + 5}s ease-in-out infinite`,
+                            top: bubble.top,
+                            left: bubble.left,
+                            width: bubble.size,
+                            height: bubble.size,
+                            animation: `float ${bubble.duration} ease-in-out infinite`,
                         }}
                     />
                 ))}
             </motion.div>
             <motion.h1
-                className="text-5xl md:text-7xl font-bold text-pink-500 mb-4 relative z-10"
+                className="text-5xl md:text-7xl font-bold text-pink-500 mb-4 relative z-10 tracking-tight"
                 initial={{ y: -50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
@@ -60,7 +70,7 @@ export default function Header() {
                 </motion.span>
             </motion.h1>
             <motion.p
-                className="text-2xl md:text-3xl text-purple-500 relative z-10"
+                className="text-2xl md:text-3xl text-purple-500 relative z-10 font-semibold"
                 initial={{ y: 50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
@@ -72,7 +82,8 @@ export default function Header() {
                     href="https://www.linkedin.com/in/shi-hui-fong-06869a296/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-purple-500 hover:text-purple-700 transition duration-300"
+                    aria-label="Open LinkedIn profile"
+                    className="text-purple-500 hover:text-purple-700 transition duration-300 p-2 rounded-full hover:bg-white/70"
                 >
                     <svg
                         className="h-8 w-8"
@@ -87,7 +98,8 @@ export default function Header() {
                     href="https://github.com/fongshihui"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-purple-500 hover:text-purple-700 transition duration-300"
+                    aria-label="Open GitHub profile"
+                    className="text-purple-500 hover:text-purple-700 transition duration-300 p-2 rounded-full hover:bg-white/70"
                 >
                     <svg
                         className="h-8 w-8"

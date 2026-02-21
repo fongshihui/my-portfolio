@@ -12,14 +12,14 @@ export default function Projects() {
                 {projects.map((project) => (
                     <motion.div
                         key={project.id}
-                        whileHover={{ scale: 1.05 }}
-                        className="bg-white rounded-3xl overflow-hidden shadow-lg"
+                        whileHover={{ y: -6 }}
+                        className="bg-white rounded-3xl overflow-hidden shadow-lg elevate-on-hover"
                     >
                         <div className="relative h-64">
                             <img
                                 src={project.image}
                                 alt={project.name}
-                                className="w-full h-full object-cover"
+                                className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                             />
                             <div className="absolute top-0 left-0 bg-pink-400 text-white text-4xl p-2 rounded-br-2xl">
                                 {project.icon}
@@ -36,7 +36,7 @@ export default function Projects() {
                                 href={project.link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-block bg-purple-400 text-white rounded-full px-6 py-3 hover:bg-purple-500 transition-colors duration-300 text-lg font-semibold"
+                                className="inline-block bg-purple-400 text-white rounded-full px-6 py-3 hover:bg-purple-500 transition-colors duration-300 text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-purple-300"
                             >
                                 View Project
                             </a>

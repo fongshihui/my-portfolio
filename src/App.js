@@ -22,9 +22,9 @@ export default function App() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-pink-100 to-purple-100 text-gray-800">
+        <div className="min-h-screen text-gray-800">
             <Header />
-            <nav className="shadow-md py-4">
+            <nav className="sticky top-0 z-20 glass-surface shadow-sm py-4 border-y border-white/50">
                 <div className="container mx-auto px-4 flex justify-center space-x-4">
                     <button
                         onClick={() => handleNavClick("about")}
@@ -59,9 +59,11 @@ export default function App() {
                 </div>
             </nav>
             <main className="container mx-auto px-4 py-12">
-                {activeSection === "about" && <Skills />}
-                {activeSection === "projects" && <Projects />}
-                {activeSection === "contact" && <ContactForm />}
+                <section className="glass-surface soft-glow rounded-3xl p-6 md:p-10">
+                    {activeSection === "about" && <Skills />}
+                    {activeSection === "projects" && <Projects />}
+                    {activeSection === "contact" && <ContactForm />}
+                </section>
             </main>
         </div>
     );

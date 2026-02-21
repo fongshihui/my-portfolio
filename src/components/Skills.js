@@ -5,7 +5,7 @@ export default function Skills() {
     return (
         <section className="mb-16 px-4 max-w-4xl mx-auto">
             {/* About Me Section */}
-            <h2 className="text-5xl font-bold text-center text-gradient-to-r from-purple-600 to-pink-600 mb-8">
+            <h2 className="text-5xl font-bold text-center bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-8">
                 About Me
             </h2>
             <p className="text-xl leading-relaxed text-center text-gray-700 mb-12">
@@ -17,14 +17,14 @@ export default function Skills() {
             </p>
 
             {/* Experiences Section */}
-            <h3 className="text-4xl font-bold text-center text-gradient-to-r from-pink-600 to-purple-600 mt-16 mb-8">
+            <h3 className="text-4xl font-bold text-center bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent mt-16 mb-8">
                 My Experiences
             </h3>
             <div className="space-y-8">
                 {experiences.map((experience, index) => (
                     <div
                         key={index}
-                        className="bg-gradient-to-r from-white via-pink-50 to-purple-50 p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:scale-105"
+                        className="bg-gradient-to-r from-white via-pink-50 to-purple-50 p-8 rounded-xl shadow-lg elevate-on-hover"
                     >
                         <h4 className="text-2xl font-semibold text-pink-600 mb-2">
                             {experience.title} - {experience.company}
@@ -44,7 +44,7 @@ export default function Skills() {
             </div>
 
             {/* Skills Section */}
-            <h3 className="text-4xl font-bold text-center text-gradient-to-r from-purple-600 to-pink-600 mt-16 mb-8">
+            <h3 className="text-4xl font-bold text-center bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mt-16 mb-8">
              Technical Skills 
             </h3>
             <div className="bg-gradient-to-r from-pink-50 to-purple-50 rounded-3xl p-8 shadow-lg">
