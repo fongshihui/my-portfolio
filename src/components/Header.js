@@ -33,7 +33,7 @@ export default function Header() {
     }, []);
 
     return (
-        <header className="py-14 px-4 text-center relative overflow-hidden">
+        <header className="relative overflow-hidden px-4 py-16 text-center md:py-20">
             <motion.div
                 className="absolute inset-0 z-0"
                 initial={{ opacity: 0 }}
@@ -55,35 +55,37 @@ export default function Header() {
                 ))}
             </motion.div>
             <motion.h1
-                className="text-5xl md:text-7xl font-bold text-pink-500 mb-4 relative z-10 tracking-tight"
+                className="relative z-10 mb-5 text-5xl font-black tracking-tight text-gray-950 md:text-7xl"
                 initial={{ y: -50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
             >
-                <span className="inline-block">{typedName}</span>
+                <span className="inline-block bg-gradient-to-r from-pink-500 via-fuchsia-500 to-purple-600 bg-clip-text text-transparent">
+                    {typedName}
+                </span>
                 <motion.span
                     animate={{ opacity: [0, 1, 0] }}
                     transition={{ repeat: Infinity, duration: 0.8 }}
-                    className="inline-block ml-1"
+                    className="ml-1 inline-block text-purple-600"
                 >
                     |
                 </motion.span>
             </motion.h1>
             <motion.p
-                className="text-2xl md:text-3xl text-purple-500 relative z-10 font-semibold"
+                className="relative z-10 mx-auto max-w-2xl rounded-full border border-pink-100 bg-white/80 px-6 py-3 text-lg font-semibold text-gray-700 shadow-sm md:text-2xl"
                 initial={{ y: 50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
             >
-                Interested in all things Tech ✨
+                Backend-focused builder interested in cloud systems, product impact, and scalable engineering.
             </motion.p>
-            <div className="flex justify-center space-x-6 mt-8 relative z-10">
+            <div className="relative z-10 mt-8 flex justify-center space-x-6">
                 <a
                     href="https://www.linkedin.com/in/shi-hui-fong-06869a296/"
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Open LinkedIn profile"
-                    className="text-purple-500 hover:text-purple-700 transition duration-300 p-2 rounded-full hover:bg-white/70"
+                    className="rounded-full border border-purple-100 bg-white/85 p-3 text-purple-500 transition duration-300 hover:-translate-y-0.5 hover:bg-white hover:text-purple-700"
                 >
                     <svg
                         className="h-8 w-8"
@@ -99,7 +101,7 @@ export default function Header() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Open GitHub profile"
-                    className="text-purple-500 hover:text-purple-700 transition duration-300 p-2 rounded-full hover:bg-white/70"
+                    className="rounded-full border border-purple-100 bg-white/85 p-3 text-purple-500 transition duration-300 hover:-translate-y-0.5 hover:bg-white hover:text-purple-700"
                 >
                     <svg
                         className="h-8 w-8"

@@ -35,17 +35,20 @@ export default function ContactForm() {
 
     return (
         <section className="max-w-2xl mx-auto">
-            <h2 className="text-4xl font-bold text-center text-pink-500 mb-8">
+            <h2 className="mb-3 text-center text-4xl font-black text-gray-950">
                 Let&apos;s Connect
             </h2>
-            <form onSubmit={handleSubmit} className="space-y-6 bg-white/80 rounded-3xl p-8 shadow-lg">
+            <p className="mb-8 text-center text-gray-600">
+                Open to internship and software engineering opportunities.
+            </p>
+            <form onSubmit={handleSubmit} className="space-y-6 rounded-3xl border border-pink-100 bg-white p-8 shadow-lg">
                 {isSubmitted && (
-                    <p className="text-green-600 text-center font-semibold">
+                    <p className="rounded-xl bg-green-50 p-3 text-center font-semibold text-green-700">
                         Message sent successfully! 🎉
                     </p>
                 )}
                 <div>
-                    <label htmlFor="name" className="block text-lg font-medium text-gray-700 mb-2">
+                    <label htmlFor="name" className="mb-2 block text-sm font-bold uppercase tracking-wide text-gray-600">
                         Your Name
                     </label>
                     <input
@@ -54,12 +57,12 @@ export default function ContactForm() {
                         name="name"
                         value={formData.name}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 rounded-full border-2 border-pink-200 focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-200 text-lg"
+                        className="w-full rounded-2xl border border-pink-200 px-4 py-3 text-lg transition-colors focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-200"
                         required
                     />
                 </div>
                 <div>
-                    <label htmlFor="email" className="block text-lg font-medium text-gray-700 mb-2">
+                    <label htmlFor="email" className="mb-2 block text-sm font-bold uppercase tracking-wide text-gray-600">
                         Email Address
                     </label>
                     <input
@@ -68,12 +71,12 @@ export default function ContactForm() {
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 rounded-full border-2 border-pink-200 focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-200 text-lg"
+                        className="w-full rounded-2xl border border-pink-200 px-4 py-3 text-lg transition-colors focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-200"
                         required
                     />
                 </div>
                 <div>
-                    <label htmlFor="message" className="block text-lg font-medium text-gray-700 mb-2">
+                    <label htmlFor="message" className="mb-2 block text-sm font-bold uppercase tracking-wide text-gray-600">
                         Your Message
                     </label>
                     <textarea
@@ -81,13 +84,13 @@ export default function ContactForm() {
                         name="message"
                         value={formData.message}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 rounded-3xl border-2 border-pink-200 focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-200 text-lg min-h-36"
+                        className="min-h-36 w-full rounded-2xl border border-pink-200 px-4 py-3 text-lg transition-colors focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-200"
                         required
                     />
                 </div>
                 <button
                     type="submit"
-                    className="w-full py-3 px-4 bg-pink-500 text-white rounded-full text-lg font-semibold hover:bg-pink-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-pink-300"
+                    className="w-full rounded-2xl bg-gray-950 px-4 py-3 text-lg font-bold text-white transition-colors duration-200 hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-300"
                 >
                     Send Message
                 </button>

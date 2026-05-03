@@ -3,12 +3,12 @@ import skills from "../data/skillsData";
 
 export default function Skills() {
     return (
-        <section className="mb-16 px-4 max-w-4xl mx-auto">
+        <section className="mx-auto mb-16 max-w-5xl px-4">
             {/* About Me Section */}
-            <h2 className="text-5xl font-bold text-center bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-8">
+            <h2 className="mb-8 text-center text-4xl font-black text-gray-950 md:text-5xl">
                 About Me
             </h2>
-            <p className="text-xl leading-relaxed text-center text-gray-700 mb-12">
+            <p className="mx-auto mb-12 max-w-3xl text-center text-lg leading-relaxed text-gray-700 md:text-xl">
                 I am Shi Hui, a Year 3 Information Systems undergraduate at
                 Singapore Management University (SMU), with a strong interest in
                 backend engineering and scalable software systems. I enjoy solving
@@ -17,24 +17,24 @@ export default function Skills() {
             </p>
 
             {/* Experiences Section */}
-            <h3 className="text-4xl font-bold text-center bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent mt-16 mb-8">
+            <h3 className="mt-16 mb-8 text-center text-3xl font-black text-gray-950 md:text-4xl">
                 Professional Experience
             </h3>
             <div className="space-y-8">
                 {experiences.map((experience, index) => (
                     <div
                         key={index}
-                        className="bg-gradient-to-r from-white via-pink-50 to-purple-50 p-8 rounded-xl shadow-lg elevate-on-hover"
+                        className="elevate-on-hover rounded-2xl border border-pink-100 bg-white p-7 shadow-lg md:p-8"
                     >
-                        <h4 className="text-2xl font-semibold text-pink-600 mb-2">
+                        <h4 className="mb-2 text-xl font-bold text-gray-950 md:text-2xl">
                             {experience.title} - {experience.company}
                         </h4>
-                        <p className="text-gray-500 italic mb-4">
+                        <p className="mb-4 inline-block rounded-full bg-gray-100 px-3 py-1 text-sm font-semibold text-gray-600">
                             {experience.period}
                         </p>
-                        <ul className="list-disc ml-6 text-gray-700 space-y-2">
+                        <ul className="ml-5 list-disc space-y-2.5 text-gray-700">
                             {experience.description.map((item, idx) => (
-                                <li key={idx} className="hover:text-pink-600">
+                                <li key={idx} className="leading-relaxed hover:text-pink-600">
                                     {item}
                                 </li>
                             ))}
@@ -44,27 +44,27 @@ export default function Skills() {
             </div>
 
             {/* Skills Section */}
-            <h3 className="text-4xl font-bold text-center bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mt-16 mb-8">
-             Technical Skills 
+            <h3 className="mt-16 mb-8 text-center text-3xl font-black text-gray-950 md:text-4xl">
+             Technical Skills
             </h3>
-            <div className="bg-gradient-to-r from-pink-50 to-purple-50 rounded-3xl p-8 shadow-lg">
+            <div className="rounded-3xl border border-purple-100 bg-white p-8 shadow-lg">
                 {skills.map((skill) => (
                     <div key={skill.name} className="relative pt-1 mb-6">
-                        <div className="flex mb-2 items-center justify-between">
-                            <span className="text-lg font-semibold inline-block py-1 px-3 uppercase rounded-full text-pink-600 bg-pink-100 hover:shadow-md transition-shadow duration-300">
+                        <div className="mb-2 flex items-center justify-between">
+                            <span className="inline-block rounded-full bg-pink-100 px-3 py-1 text-base font-semibold uppercase text-pink-600 transition-shadow duration-300 hover:shadow-md md:text-lg">
                                 {skill.icon} {skill.name}
                             </span>
-                            <span className="text-lg font-semibold inline-block text-pink-600">
+                            <span className="inline-block text-base font-bold text-gray-700 md:text-lg">
                                 {skill.level}%
                             </span>
                         </div>
-                        <div className="overflow-hidden h-6 mb-4 text-xs flex rounded-full bg-pink-100 shadow-md">
+                        <div className="mb-4 flex h-5 overflow-hidden rounded-full bg-gray-100 text-xs shadow-inner">
                             <div
                                 style={{
                                     width: `${skill.level}%`,
-                                    background: `linear-gradient(to right, ${skill.color}, #fff)`,
+                                    background: `linear-gradient(90deg, ${skill.color}, #f9a8d4)`,
                                 }}
-                                className="shadow-inner flex flex-col text-center whitespace-nowrap text-white justify-center rounded-full"
+                                className="flex flex-col justify-center whitespace-nowrap rounded-full text-center text-white shadow-inner"
                             ></div>
                         </div>
                     </div>

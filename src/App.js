@@ -21,45 +21,40 @@ export default function App() {
         setActiveSection(section);
     };
 
+    const navClass = (section) =>
+        `nav-chip rounded-full px-5 py-2 text-base font-bold transition-all duration-200 md:px-6 md:text-lg ${
+            activeSection === section
+                ? "bg-gray-950 text-white shadow-md ring-2 ring-gray-900/10"
+                : "text-gray-800 hover:-translate-y-0.5 hover:bg-pink-50"
+        }`;
+
     return (
-        <div className="min-h-screen text-gray-800">
+        <div className="page-shell min-h-screen text-gray-800">
             <Header />
-            <nav className="sticky top-0 z-20 glass-surface shadow-sm py-4 border-y border-white/50">
-                <div className="container mx-auto px-4 flex justify-center space-x-4">
+            <nav className="sticky top-0 z-20 border-y border-white/70 py-4 shadow-sm glass-surface">
+                <div className="container mx-auto flex flex-wrap justify-center gap-3 px-4">
                     <button
                         onClick={() => handleNavClick("about")}
-                        className={`px-6 py-2 text-lg font-semibold rounded-full ${
-                            activeSection === "about"
-                                ? "bg-pink-400 text-white"
-                                : "bg-gray-200 text-gray-800 hover:bg-gray-300"
-                        }`}
+                        className={navClass("about")}
                     >
                         About
                     </button>
                     <button
                         onClick={() => handleNavClick("projects")}
-                        className={`px-6 py-2 text-lg font-semibold rounded-full ${
-                            activeSection === "projects"
-                                ? "bg-pink-400 text-white"
-                                : "bg-gray-200 text-gray-800 hover:bg-gray-300"
-                        }`}
+                        className={navClass("projects")}
                     >
                         Projects
                     </button>
                     <button
                         onClick={() => handleNavClick("contact")}
-                        className={`px-6 py-2 text-lg font-semibold rounded-full ${
-                            activeSection === "contact"
-                                ? "bg-pink-400 text-white"
-                                : "bg-gray-200 text-gray-800 hover:bg-gray-300"
-                        }`}
+                        className={navClass("contact")}
                     >
                         Contact
                     </button>
                 </div>
             </nav>
-            <main className="container mx-auto px-4 py-12">
-                <section className="glass-surface soft-glow rounded-3xl p-6 md:p-10">
+            <main className="container mx-auto px-4 py-10 md:py-12">
+                <section className="grid-texture rounded-3xl border border-white/70 p-5 glass-surface soft-glow md:p-10">
                     {activeSection === "about" && <Skills />}
                     {activeSection === "projects" && <Projects />}
                     {activeSection === "contact" && <ContactForm />}

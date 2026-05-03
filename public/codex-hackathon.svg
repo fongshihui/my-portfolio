@@ -1,0 +1,30 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Codex Hackathon project artwork</title>
+  <desc id="desc">A polished abstract coding workspace with command panels, connected nodes, and a Codex Hackathon label.</desc>
+  <rect width="1200" height="800" fill="#111827"/>
+  <rect x="90" y="80" width="1020" height="640" rx="44" fill="#F8FAFC"/>
+  <rect x="136" y="132" width="928" height="92" rx="24" fill="#111827"/>
+  <circle cx="184" cy="178" r="13" fill="#FB7185"/>
+  <circle cx="226" cy="178" r="13" fill="#FBBF24"/>
+  <circle cx="268" cy="178" r="13" fill="#34D399"/>
+  <text x="326" y="188" fill="#E5E7EB" font-family="Avenir Next, Inter, Arial, sans-serif" font-size="34" font-weight="700">Codex Hackathon</text>
+  <rect x="136" y="264" width="430" height="320" rx="28" fill="#1F2937"/>
+  <text x="178" y="330" fill="#A7F3D0" font-family="Menlo, Consolas, monospace" font-size="28" font-weight="700">&gt; build --fast</text>
+  <text x="178" y="388" fill="#E5E7EB" font-family="Menlo, Consolas, monospace" font-size="24">idea: shipped</text>
+  <text x="178" y="438" fill="#E5E7EB" font-family="Menlo, Consolas, monospace" font-size="24">agent: codex</text>
+  <text x="178" y="488" fill="#E5E7EB" font-family="Menlo, Consolas, monospace" font-size="24">status: demo ready</text>
+  <rect x="178" y="526" width="262" height="16" rx="8" fill="#FB7185"/>
+  <rect x="178" y="554" width="338" height="16" rx="8" fill="#A78BFA"/>
+  <rect x="620" y="278" width="210" height="92" rx="24" fill="#FCE7F3" stroke="#F9A8D4" stroke-width="3"/>
+  <rect x="822" y="430" width="210" height="92" rx="24" fill="#EDE9FE" stroke="#C4B5FD" stroke-width="3"/>
+  <rect x="626" y="560" width="250" height="92" rx="24" fill="#ECFDF5" stroke="#6EE7B7" stroke-width="3"/>
+  <path d="M727 370 C755 404 785 420 822 455" stroke="#A78BFA" stroke-width="10" stroke-linecap="round"/>
+  <path d="M822 493 C786 535 748 552 708 560" stroke="#34D399" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="724" cy="324" r="23" fill="#FB7185"/>
+  <circle cx="927" cy="476" r="23" fill="#8B5CF6"/>
+  <circle cx="746" cy="606" r="23" fill="#10B981"/>
+  <text x="674" y="334" fill="#831843" font-family="Avenir Next, Inter, Arial, sans-serif" font-size="24" font-weight="700">Prompt</text>
+  <text x="876" y="486" fill="#4C1D95" font-family="Avenir Next, Inter, Arial, sans-serif" font-size="24" font-weight="700">Build</text>
+  <text x="686" y="616" fill="#065F46" font-family="Avenir Next, Inter, Arial, sans-serif" font-size="24" font-weight="700">Ship</text>
+  <path d="M930 286 L960 350 L1030 360 L978 406 L992 476 L930 440 L868 476 L882 406 L830 360 L900 350 Z" fill="#FBBF24"/>
+</svg>
