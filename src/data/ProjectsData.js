@@ -1,17 +1,17 @@
 const projects = [
     {
         id: 1,
-        name: "Codex Hackathon",
+        name: "Interview Prep Studio",
         description:
-            "Built a rapid prototype with OpenAI Codex as an AI engineering partner, using fast iteration loops to turn an idea into a working product experience during the hackathon.",
+            "Built Interview Prep Studio during a hackathon: a full-stack interview preparation workspace that converts resume and role context into a candidate brief, tailored resume draft, interview question bank, and structured prep plan with secure AI-backed workflows.",
         image: "/codex-hackathon.svg",
         link: "https://interview-prep-studio.onrender.com/#context",
-        icon: "⚡",
-        status: "Hackathon build",
-        tags: ["OpenAI Codex", "React", "Rapid prototyping", "Product thinking"],
+        icon: "🎯",
+        status: "Deployed hackathon app",
+        tags: ["JavaScript", "Node.js", "Supabase", "Gemini API", "Render"],
         highlights: [
-            "Used AI-assisted development to move from concept to implementation quickly.",
-            "Focused on clear user flows, practical automation, and demo-ready polish.",
+            "Implemented authenticated workspace flows with Supabase Auth and row-level security for per-user saved state.",
+            "Designed backend AI generation and import routes to keep API keys server-side while supporting resume, profile, and job-context workflows.",
         ],
     },
     {
