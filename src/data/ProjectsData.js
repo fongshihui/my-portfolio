@@ -5,7 +5,7 @@ const projects = [
         description:
             "Built a rapid prototype with OpenAI Codex as an AI engineering partner, using fast iteration loops to turn an idea into a working product experience during the hackathon.",
         image: "/codex-hackathon.svg",
-        link: "https://github.com/fongshihui",
+        link: "https://interview-prep-studio.onrender.com/#context",
         icon: "⚡",
         status: "Hackathon build",
         tags: ["OpenAI Codex", "React", "Rapid prototyping", "Product thinking"],
