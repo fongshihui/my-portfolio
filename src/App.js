@@ -7,8 +7,25 @@ import { trackPageView, trackEvent } from "./utils/analytics";
 
 import "./App.css";
 
+const sections = ["about", "skills", "projects", "contact"];
+
+function getSectionFromHash() {
+    const hash = window.location.hash.replace("#", "");
+    return sections.includes(hash) ? hash : "about";
+}
+
 export default function App() {
-    const [activeSection, setActiveSection] = useState("about");
+    const [activeSection, setActiveSection] = useState(getSectionFromHash);
+
+    useEffect(() => {
+        const syncSectionWithHash = () => {
+            setActiveSection(getSectionFromHash());
+        };
+
+        window.addEventListener("hashchange", syncSectionWithHash);
+        return () => window.removeEventListener("hashchange", syncSectionWithHash);
+    }, []);
+
     useEffect(() => {
         trackPageView(activeSection);
     }, [activeSection]);
@@ -18,14 +35,13 @@ export default function App() {
             section,
             source: "top_nav",
         });
+        window.location.hash = section;
         setActiveSection(section);
     };
 
     const navClass = (section) =>
-        `nav-chip rounded-full px-5 py-2 text-base font-bold transition-all duration-200 md:px-6 md:text-lg ${
-            activeSection === section
-                ? "bg-gray-950 text-white shadow-md ring-2 ring-gray-900/10"
-                : "text-gray-800 hover:-translate-y-0.5 hover:bg-pink-50"
+        `nav-chip ${
+            activeSection === section ? "nav-chip-active" : "nav-chip-idle"
         }`;
 
     return (
@@ -38,6 +54,12 @@ export default function App() {
                         className={navClass("about")}
                     >
                         About
+                    </button>
+                    <button
+                        onClick={() => handleNavClick("skills")}
+                        className={navClass("skills")}
+                    >
+                        Skills
                     </button>
                     <button
                         onClick={() => handleNavClick("projects")}
@@ -55,7 +77,8 @@ export default function App() {
             </nav>
             <main className="container mx-auto px-4 py-10 md:py-12">
                 <section className="grid-texture rounded-3xl border border-white/70 p-5 glass-surface soft-glow md:p-10">
-                    {activeSection === "about" && <Skills />}
+                    {activeSection === "about" && <Skills showSkills={false} />}
+                    {activeSection === "skills" && <Skills showSkills={true} />}
                     {activeSection === "projects" && <Projects />}
                     {activeSection === "contact" && <ContactForm />}
                 </section>

@@ -34,13 +34,39 @@ export default function ContactForm() {
     };
 
     return (
-        <section className="max-w-2xl mx-auto">
+        <section className="mx-auto max-w-3xl">
             <h2 className="mb-3 text-center text-4xl font-black text-gray-950">
                 Let&apos;s Connect
             </h2>
             <p className="mb-8 text-center text-gray-600">
                 Open to internship and software engineering opportunities.
             </p>
+
+            <div className="mb-8 grid gap-4 rounded-3xl border border-pink-100 bg-white p-6 shadow-lg md:grid-cols-2">
+                <div>
+                    <p className="text-sm font-bold uppercase tracking-wide text-gray-500">Location</p>
+                    <p className="mt-2 text-gray-800">Singapore</p>
+                </div>
+                <div>
+                    <p className="text-sm font-bold uppercase tracking-wide text-gray-500">Email</p>
+                    <a href="mailto:reneefongsh@gmail.com" className="mt-2 inline-block text-gray-800 hover:text-pink-600">
+                        reneefongsh@gmail.com
+                    </a>
+                </div>
+                <div>
+                    <p className="text-sm font-bold uppercase tracking-wide text-gray-500">Links</p>
+                    <div className="mt-2 flex flex-wrap gap-3 text-sm text-gray-800">
+                        <a href="https://github.com/fongshihui" target="_blank" rel="noreferrer" className="hover:text-pink-600">Github</a>
+                        <a href="https://www.linkedin.com/in/shi-hui-fong-06869a296/" target="_blank" rel="noreferrer" className="hover:text-pink-600">Linkedin</a>
+                        <a href="https://github.com/fongshihui" target="_blank" rel="noreferrer" className="hover:text-pink-600">Portfolio</a>
+                    </div>
+                </div>
+                <div>
+                    <p className="text-sm font-bold uppercase tracking-wide text-gray-500">Availability</p>
+                    <p className="mt-2 text-gray-800">Open to 2027 graduate and internship opportunities</p>
+                </div>
+            </div>
+
             <form onSubmit={handleSubmit} className="space-y-6 rounded-3xl border border-pink-100 bg-white p-8 shadow-lg">
                 {isSubmitted && (
                     <p className="rounded-xl bg-green-50 p-3 text-center font-semibold text-green-700">

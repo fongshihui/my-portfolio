@@ -4,7 +4,7 @@ import confetti from "canvas-confetti";
 
 export default function Header() {
     const [typedName, setTypedName] = useState("");
-    const name = "Shi Hui";
+    const name = "Fong Shi Hui";
     const bubbles = useMemo(
         () =>
             [...Array(50)].map(() => ({
@@ -72,12 +72,12 @@ export default function Header() {
                 </motion.span>
             </motion.h1>
             <motion.p
-                className="relative z-10 mx-auto max-w-2xl rounded-full border border-pink-100 bg-white/80 px-6 py-3 text-lg font-semibold text-gray-700 shadow-sm md:text-2xl"
+                className="relative z-10 mx-auto max-w-3xl rounded-full border border-pink-100 bg-white/80 px-6 py-3 text-lg font-semibold text-gray-700 shadow-sm md:text-2xl"
                 initial={{ y: 50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
             >
-                Backend-focused builder interested in cloud systems, product impact, and scalable engineering.
+                Cloud-native backend engineer building scalable systems, distributed data platforms, and product-impactful software.
             </motion.p>
             <div className="relative z-10 mt-8 flex justify-center space-x-6">
                 <a
