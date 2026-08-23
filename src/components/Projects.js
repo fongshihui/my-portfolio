@@ -8,90 +8,110 @@ export default function Projects() {
 
     const ProjectCard = ({ project, featured = false }) => (
         <motion.article
-            whileHover={{ y: -6 }}
-            className={`project-card group rounded-2xl border border-slate-200 bg-white shadow-lg elevate-on-hover min-w-0 ${
-                featured ? "p-6 md:p-8" : "p-6"
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.3 }}
+            className={`group relative flex flex-col justify-between rounded-3xl border border-slate-200/90 bg-white p-6 shadow-md transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl ${
+                featured ? "md:p-8 border-purple-200 bg-gradient-to-br from-white via-purple-50/20 to-white" : ""
             }`}
         >
-            <div className="mb-5 flex items-start justify-between gap-4">
-                <div className="flex items-center gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-pink-100 via-purple-100 to-indigo-100 text-2xl shadow-sm">
-                        {project.icon}
+            <div>
+                {/* Header row */}
+                <div className="mb-4 flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-3.5">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-pink-100 via-purple-100 to-indigo-100 text-2xl shadow-xs ring-1 ring-white">
+                            {project.icon}
+                        </div>
+                        <div>
+                            <span className="text-[11px] font-bold uppercase tracking-wider text-purple-700">
+                                {featured ? "⭐ Featured Project" : "Project"}
+                            </span>
+                            <h3
+                                className={`mt-0.5 font-bold text-gray-950 ${
+                                    featured ? "text-2xl md:text-3xl" : "text-xl"
+                                }`}
+                            >
+                                {project.name}
+                            </h3>
+                        </div>
                     </div>
-                    <div>
-                        <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500">
-                            {featured ? "Featured project" : "Project"}
-                        </p>
-                        <h3
-                            className={`mt-2 font-bold text-gray-950 ${
-                                featured ? "text-3xl md:text-4xl" : "text-2xl"
-                            }`}
-                        >
-                            {project.name}
-                        </h3>
-                    </div>
+                    {project.status && (
+                        <span className="inline-flex rounded-full border border-purple-100 bg-purple-50/70 px-3 py-1 text-[11px] font-bold text-purple-800">
+                            {project.status}
+                        </span>
+                    )}
                 </div>
-                {project.status && (
-                    <span className="inline-flex rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-600">
-                        {project.status}
-                    </span>
+
+                {/* Description */}
+                <p className="text-sm leading-relaxed text-gray-600 md:text-base">
+                    {project.description}
+                </p>
+
+                {/* Tags */}
+                {project.tags?.length > 0 && (
+                    <div className="mt-4 flex flex-wrap gap-1.5">
+                        {project.tags.map((tag) => (
+                            <span
+                                key={tag}
+                                className="rounded-md bg-slate-50 px-2.5 py-1 text-xs font-semibold text-slate-700 ring-1 ring-slate-200"
+                            >
+                                {tag}
+                            </span>
+                        ))}
+                    </div>
+                )}
+
+                {/* Highlights */}
+                {project.highlights?.length > 0 && (
+                    <ul className="mt-5 space-y-2 text-xs leading-relaxed text-gray-700 md:text-sm">
+                        {project.highlights.map((highlight) => (
+                            <li key={highlight} className="flex items-start gap-2.5">
+                                <span className="mt-1.5 h-1.5 w-1.5 flex-none rounded-full bg-pink-500" />
+                                <span>{highlight}</span>
+                            </li>
+                        ))}
+                    </ul>
                 )}
             </div>
 
-            <p className="text-base leading-relaxed text-gray-600">
-                {project.description}
-            </p>
-
-            {project.tags?.length > 0 && (
-                <div className="mt-5 flex flex-wrap gap-2">
-                    {project.tags.map((tag) => (
-                        <span
-                            key={tag}
-                            className="rounded-full bg-purple-50 px-3 py-1 text-sm font-semibold text-purple-700 ring-1 ring-purple-100"
-                        >
-                            {tag}
-                        </span>
-                    ))}
-                </div>
-            )}
-
-            {project.highlights?.length > 0 && (
-                <ul className="mt-5 space-y-3 text-sm leading-relaxed text-gray-700">
-                    {project.highlights.map((highlight) => (
-                        <li key={highlight} className="flex gap-3">
-                            <span className="mt-2 h-2 w-2 flex-none rounded-full bg-pink-400" />
-                            <span>{highlight}</span>
-                        </li>
-                    ))}
-                </ul>
-            )}
-
-            <a
-                href={project.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="project-link mt-6 inline-flex w-fit items-center rounded-full bg-gray-950 px-5 py-3 text-sm font-bold text-white transition-all duration-300 hover:bg-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-300"
-            >
-                {project.linkLabel || "View Details"}
-            </a>
+            {/* Bottom link button */}
+            <div className="mt-6 pt-2">
+                <a
+                    href={project.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-full bg-gray-950 px-5 py-2.5 text-xs font-bold text-white shadow-sm transition-all duration-200 hover:bg-purple-600 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-purple-300 sm:text-sm"
+                >
+                    <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 .5c-6.627 0-12 5.373-12 12 0 5.302 3.438 9.8 8.205 11.387.6.113.793-.26.793-.577 0-.286-.01-1.041-.015-2.045-3.338.724-4.042-1.609-4.042-1.609-.546-1.387-1.333-1.757-1.333-1.757-1.089-.744.083-.729.083-.729 1.205.084 1.84 1.236 1.84 1.236 1.07 1.834 2.809 1.305 3.495.998.108-.775.419-1.305.763-1.605-2.665-.304-5.466-1.334-5.466-5.931 0-1.31.469-2.381 1.235-3.221-.123-.304-.535-1.524.117-3.176 0 0 1.008-.322 3.3 1.23.957-.266 1.983-.398 3.003-.403 1.02.005 2.047.137 3.005.403 2.29-1.553 3.296-1.23 3.296-1.23.653 1.653.241 2.873.118 3.176.769.84 1.233 1.911 1.233 3.221 0 4.61-2.807 5.623-5.479 5.921.43.369.814 1.096.814 2.209 0 1.596-.015 2.883-.015 3.275 0 .319.192.694.801.577 4.765-1.588 8.202-6.086 8.202-11.387 0-6.627-5.373-12-12-12z" />
+                    </svg>
+                    <span>{project.linkLabel || "View Code on GitHub"}</span>
+                    <span>→</span>
+                </a>
+            </div>
         </motion.article>
     );
 
     return (
-        <section className="mb-16">
+        <section className="mx-auto max-w-6xl px-2 py-4 sm:px-4">
             <div className="mx-auto mb-10 max-w-3xl text-center">
-                <h2 className="text-3xl font-bold text-gray-950 sm:text-4xl md:text-5xl">
-                    Selected Projects
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-purple-100 px-3 py-1 text-xs font-bold uppercase tracking-wider text-purple-700">
+                    💻 Engineering Portfolio
+                </span>
+                <h2 className="mt-3 text-3xl font-black text-gray-950 md:text-5xl">
+                    Featured Systems &amp; Projects
                 </h2>
                 <p className="mt-4 text-base leading-relaxed text-gray-600 md:text-lg">
-                    A mix of hackathon builds, cloud architecture, AI learning
-                    tools, and product-focused web apps.
+                    Low-latency trading engines, real-time streaming architectures, distributed rate limiters, and AI product services.
                 </p>
             </div>
+
             <div className="mb-8">
                 <ProjectCard project={featuredProject} featured />
             </div>
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
+
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {otherProjects.map((project) => (
                     <ProjectCard key={project.id} project={project} />
                 ))}

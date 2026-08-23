@@ -3,98 +3,98 @@
 @tailwind utilities;
 
 ::selection {
-  background: #f9a8d4;
-  color: #111827;
+  background: #f472b6;
+  color: #ffffff;
 }
 
 .soft-glow {
-  box-shadow: 0 20px 60px rgba(148, 163, 184, 0.18);
+  box-shadow: 0 20px 60px rgba(148, 163, 184, 0.15);
 }
 
 .glass-surface {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-color: rgba(255, 255, 255, 0.8);
 }
 
 .grid-texture {
   background-image:
-    linear-gradient(rgba(148, 163, 184, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
-  background-size: 26px 26px;
+    linear-gradient(rgba(148, 163, 184, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.07) 1px, transparent 1px);
+  background-size: 28px 28px;
 }
 
 @keyframes float {
   0%,
   100% {
-    transform: translateY(0px);
+    transform: translateY(0px) rotate(0deg);
   }
   50% {
-    transform: translateY(-14px);
+    transform: translateY(-16px) rotate(6deg);
   }
 }
 
 .elevate-on-hover {
-  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+  transition: transform 240ms ease, box-shadow 240ms ease, border-color 240ms ease;
 }
 
 .elevate-on-hover:hover {
   transform: translateY(-4px);
-  box-shadow: 0 26px 52px rgba(15, 23, 42, 0.12);
-  border-color: rgba(168, 85, 247, 0.25);
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
+  border-color: rgba(168, 85, 247, 0.3);
 }
 
 .nav-chip {
+  position: relative;
+  overflow: hidden;
   border-radius: 9999px;
-  border: 1px solid rgba(148, 163, 184, 0.2);
-  font-size: 0.95rem;
-  font-weight: 800;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  font-size: 0.875rem;
+  font-weight: 700;
   line-height: 1.25;
-  padding: 0.6rem 1.2rem;
-  letter-spacing: 0.02em;
-  transition: background-color 180ms ease, border-color 180ms ease,
-    box-shadow 180ms ease, color 180ms ease, transform 180ms ease;
+  padding: 0.55rem 1.15rem;
+  letter-spacing: 0.01em;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: background-color 200ms ease, border-color 200ms ease,
+    box-shadow 200ms ease, color 200ms ease, transform 200ms ease;
 }
 
 .nav-chip:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 }
 
 .nav-chip-active {
-  background: linear-gradient(135deg, #111827 0%, #312e81 100%);
+  background: linear-gradient(135deg, #0f172a 0%, #312e81 60%, #6366f1 100%);
   border-color: transparent;
   color: #ffffff;
-  box-shadow: 0 12px 24px rgba(79, 70, 229, 0.22);
+  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.28);
 }
 
 .nav-chip-idle {
-  background: rgba(255, 255, 255, 0.74);
-  color: #1f2937;
+  background: rgba(255, 255, 255, 0.85);
+  color: #334155;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
 }
 
 .nav-chip-idle:hover {
-  background: rgba(244, 114, 182, 0.08);
-}
-
-.project-card {
-  background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.94) 100%);
-}
-
-.project-link {
-  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.12);
+  border-color: rgba(167, 139, 250, 0.4);
+  color: #6d28d9;
+  box-shadow: 0 6px 16px rgba(124, 58, 237, 0.1);
 }
 
 .page-shell {
   background:
-    radial-gradient(circle at 0% 0%, rgba(244, 114, 182, 0.14) 0%, rgba(244, 114, 182, 0) 30%),
-    radial-gradient(circle at 100% 12%, rgba(167, 139, 250, 0.16) 0%, rgba(167, 139, 250, 0) 28%),
-    linear-gradient(180deg, #fff9fb 0%, #f5f3ff 100%);
+    radial-gradient(circle at 5% 5%, rgba(244, 114, 182, 0.12) 0%, rgba(244, 114, 182, 0) 35%),
+    radial-gradient(circle at 95% 15%, rgba(167, 139, 250, 0.15) 0%, rgba(167, 139, 250, 0) 32%),
+    radial-gradient(circle at 50% 60%, rgba(224, 231, 255, 0.3) 0%, rgba(224, 231, 255, 0) 50%),
+    linear-gradient(180deg, #fffafc 0%, #faf8ff 50%, #f4f6fb 100%);
 }
 
 @media (min-width: 768px) {
   .nav-chip {
-    font-size: 1.125rem;
-    padding-inline: 1.5rem;
+    font-size: 0.95rem;
+    padding: 0.62rem 1.35rem;
   }
 }

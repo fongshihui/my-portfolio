@@ -18,6 +18,7 @@ test('renders portfolio section navigation', () => {
   expect(screen.getByRole('button', { name: /about/i })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: /skills/i })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: /projects/i })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /exchange/i })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: /contact/i })).toBeInTheDocument();
 });
 
@@ -30,4 +31,13 @@ test('switches from about content to skills content in the skills tab', () => {
 
   expect(screen.getByRole('heading', { name: /technical skills/i })).toBeInTheDocument();
   expect(screen.queryByRole('heading', { name: /about me/i })).not.toBeInTheDocument();
+});
+
+test('shows exchange section as work in progress', () => {
+  render(<App />);
+
+  fireEvent.click(screen.getByRole('button', { name: /exchange/i }));
+
+  expect(screen.getByRole('heading', { name: /europe exchange/i })).toBeInTheDocument();
+  expect(screen.getByText(/share my exchange journey across europe\./i)).toBeInTheDocument();
 });
