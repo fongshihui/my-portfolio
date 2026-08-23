@@ -52,7 +52,6 @@ def upload_file_to_github(file_path: str, content_bytes: bytes, commit_message: 
     """Upload or update a file in the GitHub repo via REST API."""
     url = f"{GITHUB_API_BASE}/{file_path}"
     
-    # Check if file exists to get SHA for updates
     sha = None
     res = requests.get(url, headers=HEADERS, params={"ref": GITHUB_BRANCH})
     if res.status_code == 200:
@@ -72,8 +71,22 @@ def upload_file_to_github(file_path: str, content_bytes: bytes, commit_message: 
     return response.json()
 
 
+def delete_file_from_github(file_path: str, commit_message: str):
+    """Delete a file from the GitHub repo via REST API if it exists."""
+    url = f"{GITHUB_API_BASE}/{file_path}"
+    res = requests.get(url, headers=HEADERS, params={"ref": GITHUB_BRANCH})
+    if res.status_code == 200:
+        sha = res.json().get("sha")
+        delete_data = {
+            "message": commit_message,
+            "sha": sha,
+            "branch": GITHUB_BRANCH,
+        }
+        requests.delete(url, headers=HEADERS, json=delete_data)
+
+
 def get_file_from_github(file_path: str):
-    """Fetch content of a file from GitHub repo."""
+    """Fetch content of a JSON file from GitHub repo."""
     url = f"{GITHUB_API_BASE}/{file_path}"
     res = requests.get(url, headers=HEADERS, params={"ref": GITHUB_BRANCH})
     if res.status_code == 200:
@@ -90,16 +103,127 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     welcome_text = (
-        "👋 Welcome to your Portfolio Exchange Sync Bot!\n\n"
-        "Send me a photo with a caption to publish a live postcard to your portfolio:\n\n"
-        "📝 Caption Format Options:\n"
-        "1. `Location | Caption | Tag`\n"
-        "   Example: `Florence, Italy 🇮🇹 | Sunset over the Arno river | Sunset & Food`\n\n"
-        "2. `Location | Caption`\n"
-        "   Example: `Interlaken, Switzerland 🇨🇭 | First morning in the Alps!`\n\n"
-        "3. Or just send any caption!"
+        "👋 **Welcome to your Portfolio Exchange Sync Bot!**\n\n"
+        "📸 **How to Post:**\n"
+        "Send any photo with or without a caption:\n\n"
+        "• **With Location & Tag:**\n"
+        "  `Florence, Italy 🇮🇹 | Sunset over the Arno river | Food`\n\n"
+        "• **With Location & Caption:**\n"
+        "  `Interlaken, Switzerland 🇨🇭 | First morning in the Alps!`\n\n"
+        "• **Just a Caption (or no caption):**\n"
+        "  `Enjoying coffee by the canal`\n\n"
+        "🗑️ **Manage Posts:**\n"
+        "• `/list` — View published postcards\n"
+        "• `/delete_latest` — Delete the most recent postcard\n"
+        "• `/delete <number>` — Delete a specific postcard (e.g. `/delete 1`)"
     )
     await update.message.reply_text(welcome_text, parse_mode="Markdown")
+
+
+async def list_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = str(update.effective_user.id)
+    if ALLOWED_USER_ID and user_id != str(ALLOWED_USER_ID):
+        await update.message.reply_text("⛔ Unauthorized.")
+        return
+
+    json_repo_path = "src/data/liveTravelDispatches.json"
+    dispatches, _ = get_file_from_github(json_repo_path)
+
+    if not dispatches or not isinstance(dispatches, list):
+        await update.message.reply_text("📭 No postcards published yet.")
+        return
+
+    lines = ["📸 **Current Published Postcards:**\n"]
+    for idx, item in enumerate(dispatches, 1):
+        loc = item.get("location") or "No location"
+        cap = item.get("caption") or "No caption"
+        date = item.get("date") or ""
+        lines.append(f"**{idx}.** {loc} — *{cap}* ({date})")
+
+    lines.append("\nTo delete a post, send `/delete <number>` or `/delete_latest`")
+    await update.message.reply_text("\n".join(lines), parse_mode="Markdown")
+
+
+async def delete_latest_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = str(update.effective_user.id)
+    if ALLOWED_USER_ID and user_id != str(ALLOWED_USER_ID):
+        await update.message.reply_text("⛔ Unauthorized.")
+        return
+
+    json_repo_path = "src/data/liveTravelDispatches.json"
+    dispatches, _ = get_file_from_github(json_repo_path)
+
+    if not dispatches or not isinstance(dispatches, list):
+        await update.message.reply_text("📭 No postcards to delete.")
+        return
+
+    status_msg = await update.message.reply_text("⏳ Deleting latest postcard...")
+
+    deleted_item = dispatches.pop(0)
+    image_path = deleted_item.get("image", "").lstrip("/")
+
+    # Delete image file on GitHub if local image
+    if image_path.startswith("public/"):
+        delete_file_from_github(image_path, f"Delete image: {image_path}")
+    elif image_path.startswith("exchange/"):
+        delete_file_from_github(f"public/{image_path}", f"Delete image: {image_path}")
+
+    # Update JSON
+    updated_json_bytes = json.dumps(dispatches, indent=2).encode("utf-8")
+    upload_file_to_github(json_repo_path, updated_json_bytes, "Delete latest travel dispatch")
+
+    loc = deleted_item.get("location") or ""
+    cap = deleted_item.get("caption") or ""
+    await status_msg.edit_text(
+        f"🗑️ **Deleted latest postcard:**\n{loc} {cap}\n\nRemaining: {len(dispatches)} postcards.",
+        parse_mode="Markdown"
+    )
+
+
+async def delete_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = str(update.effective_user.id)
+    if ALLOWED_USER_ID and user_id != str(ALLOWED_USER_ID):
+        await update.message.reply_text("⛔ Unauthorized.")
+        return
+
+    if not context.args:
+        await update.message.reply_text("ℹ️ Please specify the number to delete (e.g. `/delete 1`). Use `/list` to view numbers.", parse_mode="Markdown")
+        return
+
+    try:
+        target_idx = int(context.args[0]) - 1
+    except ValueError:
+        await update.message.reply_text("❌ Invalid number. Example: `/delete 1`")
+        return
+
+    json_repo_path = "src/data/liveTravelDispatches.json"
+    dispatches, _ = get_file_from_github(json_repo_path)
+
+    if not dispatches or target_idx < 0 or target_idx >= len(dispatches):
+        await update.message.reply_text(f"❌ Postcard #{context.args[0]} not found. Use `/list` to view all posts.")
+        return
+
+    status_msg = await update.message.reply_text(f"⏳ Deleting postcard #{context.args[0]}...")
+
+    deleted_item = dispatches.pop(target_idx)
+    image_path = deleted_item.get("image", "").lstrip("/")
+
+    # Delete image file on GitHub if local image
+    if image_path.startswith("public/"):
+        delete_file_from_github(image_path, f"Delete image: {image_path}")
+    elif image_path.startswith("exchange/"):
+        delete_file_from_github(f"public/{image_path}", f"Delete image: {image_path}")
+
+    # Update JSON
+    updated_json_bytes = json.dumps(dispatches, indent=2).encode("utf-8")
+    upload_file_to_github(json_repo_path, updated_json_bytes, f"Delete travel dispatch #{context.args[0]}")
+
+    loc = deleted_item.get("location") or ""
+    cap = deleted_item.get("caption") or ""
+    await status_msg.edit_text(
+        f"🗑️ **Deleted postcard #{context.args[0]}:**\n{loc} {cap}\n\nRemaining: {len(dispatches)} postcards.",
+        parse_mode="Markdown"
+    )
 
 
 async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -122,19 +246,20 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
         # Optimize image
         optimized_bytes = compress_image(bytes(photo_bytearray))
 
-        # Parse caption
-        raw_caption = update.message.caption or "Exploring Europe!"
-        parts = [p.strip() for p in raw_caption.split("|")]
+        # Parse caption without forcing fake defaults
+        raw_caption = (update.message.caption or "").strip()
+        location = ""
+        caption = ""
+        tag = ""
 
-        if len(parts) >= 3:
-            location, caption, tag = parts[0], parts[1], parts[2]
-        elif len(parts) == 2:
-            location, caption = parts[0], parts[1]
-            tag = "Travel Memory"
+        if "|" in raw_caption:
+            parts = [p.strip() for p in raw_caption.split("|")]
+            if len(parts) >= 3:
+                location, caption, tag = parts[0], parts[1], parts[2]
+            elif len(parts) == 2:
+                location, caption = parts[0], parts[1]
         else:
-            location = "Europe ✈️"
-            caption = parts[0]
-            tag = "Exchange"
+            caption = raw_caption
 
         now = datetime.datetime.now()
         timestamp = now.strftime("%Y%m%d_%H%M%S")
@@ -168,21 +293,24 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
         dispatches.insert(0, new_entry)
         updated_json_bytes = json.dumps(dispatches, indent=2).encode("utf-8")
 
+        commit_desc = location or caption or filename
         upload_file_to_github(
             json_repo_path,
             updated_json_bytes,
-            f"Update travel dispatch: {location}",
+            f"Update travel dispatch: {commit_desc}",
         )
 
-        success_msg = (
-            "🎉 **Published successfully to your Portfolio!**\n\n"
-            f"📍 **Location:** {location}\n"
-            f"💬 **Caption:** {caption}\n"
-            f"🏷️ **Tag:** {tag}\n"
-            f"📅 **Date:** {date_str}\n\n"
-            "🚀 Your site deployment has been triggered."
-        )
-        await status_msg.edit_text(success_msg, parse_mode="Markdown")
+        success_lines = ["🎉 **Published successfully to your Portfolio!**\n"]
+        if location:
+            success_lines.append(f"📍 **Location:** {location}")
+        if caption:
+            success_lines.append(f"💬 **Caption:** {caption}")
+        if tag:
+            success_lines.append(f"🏷️ **Tag:** {tag}")
+        success_lines.append(f"📅 **Date:** {date_str}\n")
+        success_lines.append("🚀 Your site deployment has been triggered.")
+
+        await status_msg.edit_text("\n".join(success_lines), parse_mode="Markdown")
 
     except Exception as e:
         await status_msg.edit_text(f"❌ Error publishing photo: {str(e)}")
@@ -195,9 +323,12 @@ def main():
 
     app = ApplicationBuilder().token(TELEGRAM_BOT_TOKEN).build()
     app.add_handler(CommandHandler("start", start_command))
+    app.add_handler(CommandHandler("list", list_command))
+    app.add_handler(CommandHandler("delete_latest", delete_latest_command))
+    app.add_handler(CommandHandler("delete", delete_command))
     app.add_handler(MessageHandler(filters.PHOTO, handle_photo))
 
-    print("🤖 Telegram Exchange Bot is running and waiting for photos...")
+    print("🤖 Telegram Exchange Bot is running with delete & caption support...")
     app.run_polling()
 
 

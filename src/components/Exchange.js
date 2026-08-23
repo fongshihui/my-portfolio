@@ -9,7 +9,7 @@ export default function Exchange() {
 
     const posts = liveTravelDispatches || [];
 
-    // Extract unique tags
+    // Extract unique tags that are non-empty
     const availableTags = [
         "all",
         ...Array.from(new Set(posts.map((p) => p.tag).filter(Boolean))),
@@ -68,7 +68,7 @@ export default function Exchange() {
                         >
                             <img
                                 src={latestPost.image}
-                                alt={latestPost.location}
+                                alt={latestPost.location || latestPost.caption || "Travel postcard"}
                                 className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                             />
                             {latestPost.tag && (
@@ -80,15 +80,20 @@ export default function Exchange() {
 
                         <div className="flex flex-col justify-center space-y-4">
                             <div className="flex flex-wrap items-center gap-2 text-sm font-semibold text-purple-300">
-                                <span>📍</span>
-                                <span>{latestPost.location}</span>
-                                <span className="text-slate-500">•</span>
+                                {latestPost.location && (
+                                    <>
+                                        <span>📍 {latestPost.location}</span>
+                                        <span className="text-slate-500">•</span>
+                                    </>
+                                )}
                                 <span className="text-slate-400">{latestPost.date}</span>
                             </div>
 
-                            <h3 className="text-2xl font-black leading-snug text-white md:text-3xl">
-                                &ldquo;{latestPost.caption}&rdquo;
-                            </h3>
+                            {latestPost.caption && (
+                                <h3 className="text-2xl font-black leading-snug text-white md:text-3xl">
+                                    {latestPost.caption}
+                                </h3>
+                            )}
 
                             <p className="text-xs text-slate-400">
                                 ⚡ Updated live on-the-go via Telegram
@@ -98,8 +103,8 @@ export default function Exchange() {
                 </div>
             )}
 
-            {/* Filter and Search Bar (when multiple posts exist) */}
-            {posts.length > 1 && (
+            {/* Filter and Search Bar (when multiple tags exist) */}
+            {availableTags.length > 2 && (
                 <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     {/* Tag Filter */}
                     <div className="flex flex-wrap gap-2">
@@ -161,14 +166,17 @@ export default function Exchange() {
                                     <div className="relative h-56 w-full overflow-hidden bg-slate-100">
                                         <img
                                             src={post.image}
-                                            alt={post.location}
+                                            alt={post.location || post.caption || "Travel postcard"}
                                             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                                             loading="lazy"
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/10" />
-                                        <div className="absolute left-3.5 top-3.5 rounded-full bg-white/90 px-3 py-1 text-[11px] font-bold text-gray-800 shadow-2xs backdrop-blur-md">
-                                            📍 {post.location}
-                                        </div>
+                                        
+                                        {post.location && (
+                                            <div className="absolute left-3.5 top-3.5 rounded-full bg-white/90 px-3 py-1 text-[11px] font-bold text-gray-800 shadow-2xs backdrop-blur-md">
+                                                📍 {post.location}
+                                            </div>
+                                        )}
                                         {post.tag && (
                                             <span className="absolute bottom-3 left-3.5 rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] font-semibold text-white backdrop-blur-md">
                                                 🏷️ {post.tag}
@@ -177,9 +185,11 @@ export default function Exchange() {
                                     </div>
 
                                     <div className="p-5">
-                                        <p className="text-sm font-semibold leading-relaxed text-gray-800">
-                                            &ldquo;{post.caption}&rdquo;
-                                        </p>
+                                        {post.caption && (
+                                            <p className="text-sm font-semibold leading-relaxed text-gray-800">
+                                                {post.caption}
+                                            </p>
+                                        )}
                                         <p className="mt-3 text-xs font-medium text-gray-400">
                                             {post.date}
                                         </p>
@@ -220,18 +230,20 @@ export default function Exchange() {
                         >
                             <img
                                 src={selectedPhoto.image}
-                                alt={selectedPhoto.location}
+                                alt={selectedPhoto.location || selectedPhoto.caption || "Travel postcard"}
                                 className="max-h-[70vh] w-full object-contain bg-black"
                             />
                             <div className="p-6">
                                 <div className="flex items-center justify-between gap-4">
                                     <div>
                                         <p className="text-xs font-semibold text-purple-300">
-                                            📍 {selectedPhoto.location} &bull; {selectedPhoto.date}
+                                            {selectedPhoto.location ? `📍 ${selectedPhoto.location} • ` : ""}{selectedPhoto.date}
                                         </p>
-                                        <h4 className="mt-1 text-lg font-bold">
-                                            &ldquo;{selectedPhoto.caption}&rdquo;
-                                        </h4>
+                                        {selectedPhoto.caption && (
+                                            <h4 className="mt-1 text-lg font-bold">
+                                                {selectedPhoto.caption}
+                                            </h4>
+                                        )}
                                     </div>
                                     <button
                                         onClick={() => setSelectedPhoto(null)}
