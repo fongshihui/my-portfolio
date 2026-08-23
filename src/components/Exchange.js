@@ -30,14 +30,20 @@ export default function Exchange() {
         <section className="mx-auto max-w-6xl px-2 py-4 sm:px-4">
             {/* Header Banner */}
             <div className="relative mb-10 overflow-hidden rounded-3xl border border-pink-100 bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 p-8 text-center shadow-xs md:p-12">
-                <span className="inline-flex items-center gap-2 rounded-full border border-purple-200 bg-white/80 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-purple-700 backdrop-blur-md">
-                    <span>✈️</span> Europe Exchange
-                </span>
+                <div className="flex flex-wrap items-center justify-center gap-2">
+                    <span className="inline-flex items-center gap-2 rounded-full border border-purple-200 bg-white/80 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-purple-700 backdrop-blur-md">
+                        <span>✈️</span> Europe Exchange
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-300 bg-amber-100/90 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-amber-800 backdrop-blur-md shadow-2xs">
+                        <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
+                        🚧 WIP
+                    </span>
+                </div>
                 <h2 className="mt-4 text-3xl font-black text-gray-950 md:text-5xl">
                     Live Travel Postcards
                 </h2>
-                <p className="mx-auto mt-3 max-w-2xl text-base leading-relaxed text-gray-700 md:text-lg">
-                    Real-time snapshots, travel stories, and memories sent directly on-the-go from Telegram.
+                <p className="mx-auto mt-3 max-w-2xl text-base font-medium leading-relaxed text-gray-700 md:text-lg">
+                    Documenting my 4-month exchange
                 </p>
 
                 {posts.length > 0 && (
