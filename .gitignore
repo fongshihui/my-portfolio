@@ -25,6 +25,10 @@ __pycache__/
 .env.production.local
 sync-bot/.env
 
+# logs
+*.log
+sync-bot/*.log
+
 # misc
 .DS_Store
 .idea/

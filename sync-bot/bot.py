@@ -2,6 +2,7 @@ import os
 import io
 import json
 import base64
+import asyncio
 import datetime
 from dotenv import load_dotenv
 from PIL import Image
@@ -26,36 +27,40 @@ GITHUB_REPO_NAME = (os.getenv("GITHUB_REPO_NAME", "my-portfolio") or "").strip()
 GITHUB_BRANCH = (os.getenv("GITHUB_BRANCH", "master") or "").strip()
 
 GITHUB_API_BASE = f"https://api.github.com/repos/{GITHUB_REPO_OWNER}/{GITHUB_REPO_NAME}/contents"
-HEADERS = {
+
+# Persistent HTTP session with connection pooling
+session = requests.Session()
+session.headers.update({
     "Authorization": f"token {GITHUB_TOKEN}",
     "Accept": "application/vnd.github.v3+json",
-}
+})
 
 
-def compress_image(image_bytes: bytes, max_width: int = 1400, quality: int = 82) -> bytes:
-    """Compress and resize image to optimize for web loading."""
+def compress_image(image_bytes: bytes, max_width: int = 1400, quality: int = 80) -> bytes:
+    """Compress and resize image efficiently in background worker."""
     image = Image.open(io.BytesIO(image_bytes))
     if image.mode in ("RGBA", "P"):
         image = image.convert("RGB")
 
     width, height = image.size
-    if width > max_width:
-        new_height = int((max_width / width) * height)
-        image = image.resize((max_width, new_height), Image.Resampling.LANCZOS)
+    if width > max_width or height > max_width:
+        image.thumbnail((max_width, max_width), Image.Resampling.LANCZOS)
 
     output = io.BytesIO()
     image.save(output, format="JPEG", quality=quality, optimize=True)
     return output.getvalue()
 
 
-def upload_file_to_github(file_path: str, content_bytes: bytes, commit_message: str):
-    """Upload or update a file in the GitHub repo via REST API."""
+def upload_file_to_github(file_path: str, content_bytes: bytes, commit_message: str, known_sha: str = None):
+    """Upload or update a file in the GitHub repo via REST API (reusing connection, zero redundant GETs)."""
     url = f"{GITHUB_API_BASE}/{file_path}"
     
-    sha = None
-    res = requests.get(url, headers=HEADERS, params={"ref": GITHUB_BRANCH})
-    if res.status_code == 200:
-        sha = res.json().get("sha")
+    sha = known_sha
+    # Only make a GET request if sha is unknown AND it's not a newly generated unique exchange image
+    if sha is None and not file_path.startswith("public/exchange/"):
+        res = session.get(url, params={"ref": GITHUB_BRANCH}, timeout=10)
+        if res.status_code == 200:
+            sha = res.json().get("sha")
 
     data = {
         "message": commit_message,
@@ -65,34 +70,38 @@ def upload_file_to_github(file_path: str, content_bytes: bytes, commit_message: 
     if sha:
         data["sha"] = sha
 
-    response = requests.put(url, headers=HEADERS, json=data)
+    response = session.put(url, json=data, timeout=15)
     if response.status_code not in (200, 201):
         raise RuntimeError(f"GitHub API Error ({response.status_code}): {response.text}")
     return response.json()
 
 
-def delete_file_from_github(file_path: str, commit_message: str):
+def delete_file_from_github(file_path: str, commit_message: str, known_sha: str = None):
     """Delete a file from the GitHub repo via REST API if it exists."""
     url = f"{GITHUB_API_BASE}/{file_path}"
-    res = requests.get(url, headers=HEADERS, params={"ref": GITHUB_BRANCH})
-    if res.status_code == 200:
-        sha = res.json().get("sha")
+    sha = known_sha
+    if sha is None:
+        res = session.get(url, params={"ref": GITHUB_BRANCH}, timeout=10)
+        if res.status_code == 200:
+            sha = res.json().get("sha")
+
+    if sha:
         delete_data = {
             "message": commit_message,
             "sha": sha,
             "branch": GITHUB_BRANCH,
         }
-        requests.delete(url, headers=HEADERS, json=delete_data)
+        session.delete(url, json=delete_data, timeout=10)
 
 
 def get_file_from_github(file_path: str):
-    """Fetch content of a JSON file from GitHub repo."""
+    """Fetch content and sha of a JSON file from GitHub repo with timeout."""
     url = f"{GITHUB_API_BASE}/{file_path}"
-    res = requests.get(url, headers=HEADERS, params={"ref": GITHUB_BRANCH})
+    res = session.get(url, params={"ref": GITHUB_BRANCH}, timeout=10)
     if res.status_code == 200:
         file_data = res.json()
         raw_content = base64.b64decode(file_data["content"]).decode("utf-8")
-        return json.loads(raw_content), file_data["sha"]
+        return json.loads(raw_content), file_data.get("sha")
     return [], None
 
 
@@ -127,10 +136,10 @@ async def list_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     json_repo_path = "src/data/liveTravelDispatches.json"
-    dispatches, _ = get_file_from_github(json_repo_path)
+    dispatches, _ = await asyncio.to_thread(get_file_from_github, json_repo_path)
 
     if not dispatches or not isinstance(dispatches, list):
-        await update.message.reply_text("📭 No postcards published yet.")
+        await update.message.reply_text("📬 No postcards published yet.")
         return
 
     lines = ["📸 **Current Published Postcards:**\n"]
@@ -151,10 +160,10 @@ async def delete_latest_command(update: Update, context: ContextTypes.DEFAULT_TY
         return
 
     json_repo_path = "src/data/liveTravelDispatches.json"
-    dispatches, _ = get_file_from_github(json_repo_path)
+    dispatches, sha = await asyncio.to_thread(get_file_from_github, json_repo_path)
 
     if not dispatches or not isinstance(dispatches, list):
-        await update.message.reply_text("📭 No postcards to delete.")
+        await update.message.reply_text("📬 No postcards to delete.")
         return
 
     status_msg = await update.message.reply_text("⏳ Deleting latest postcard...")
@@ -162,15 +171,21 @@ async def delete_latest_command(update: Update, context: ContextTypes.DEFAULT_TY
     deleted_item = dispatches.pop(0)
     image_path = deleted_item.get("image", "").lstrip("/")
 
-    # Delete image file on GitHub if local image
+    # Delete image file on GitHub in background thread
     if image_path.startswith("public/"):
-        delete_file_from_github(image_path, f"Delete image: {image_path}")
+        await asyncio.to_thread(delete_file_from_github, image_path, f"Delete image: {image_path}")
     elif image_path.startswith("exchange/"):
-        delete_file_from_github(f"public/{image_path}", f"Delete image: {image_path}")
+        await asyncio.to_thread(delete_file_from_github, f"public/{image_path}", f"Delete image: {image_path}")
 
-    # Update JSON
+    # Update JSON in background thread
     updated_json_bytes = json.dumps(dispatches, indent=2).encode("utf-8")
-    upload_file_to_github(json_repo_path, updated_json_bytes, "Delete latest travel dispatch")
+    await asyncio.to_thread(
+        upload_file_to_github,
+        json_repo_path,
+        updated_json_bytes,
+        "Delete latest travel dispatch",
+        sha,
+    )
 
     loc = deleted_item.get("location") or ""
     cap = deleted_item.get("caption") or ""
@@ -197,7 +212,7 @@ async def delete_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     json_repo_path = "src/data/liveTravelDispatches.json"
-    dispatches, _ = get_file_from_github(json_repo_path)
+    dispatches, sha = await asyncio.to_thread(get_file_from_github, json_repo_path)
 
     if not dispatches or target_idx < 0 or target_idx >= len(dispatches):
         await update.message.reply_text(f"❌ Postcard #{context.args[0]} not found. Use `/list` to view all posts.")
@@ -208,15 +223,21 @@ async def delete_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     deleted_item = dispatches.pop(target_idx)
     image_path = deleted_item.get("image", "").lstrip("/")
 
-    # Delete image file on GitHub if local image
+    # Delete image file on GitHub in background thread
     if image_path.startswith("public/"):
-        delete_file_from_github(image_path, f"Delete image: {image_path}")
+        await asyncio.to_thread(delete_file_from_github, image_path, f"Delete image: {image_path}")
     elif image_path.startswith("exchange/"):
-        delete_file_from_github(f"public/{image_path}", f"Delete image: {image_path}")
+        await asyncio.to_thread(delete_file_from_github, f"public/{image_path}", f"Delete image: {image_path}")
 
-    # Update JSON
+    # Update JSON in background thread
     updated_json_bytes = json.dumps(dispatches, indent=2).encode("utf-8")
-    upload_file_to_github(json_repo_path, updated_json_bytes, f"Delete travel dispatch #{context.args[0]}")
+    await asyncio.to_thread(
+        upload_file_to_github,
+        json_repo_path,
+        updated_json_bytes,
+        f"Delete travel dispatch #{context.args[0]}",
+        sha,
+    )
 
     loc = deleted_item.get("location") or ""
     cap = deleted_item.get("caption") or ""
@@ -239,14 +260,14 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     status_msg = await update.message.reply_text("⏳ Processing and optimizing photo...")
 
     try:
-        # Download highest resolution photo
+        # Download photo
         photo_file = await update.message.photo[-1].get_file()
         photo_bytearray = await photo_file.download_as_bytearray()
 
-        # Optimize image
-        optimized_bytes = compress_image(bytes(photo_bytearray))
+        # Optimize image in background thread (non-blocking)
+        optimized_bytes = await asyncio.to_thread(compress_image, bytes(photo_bytearray))
 
-        # Parse caption without forcing fake defaults
+        # Parse caption
         raw_caption = (update.message.caption or "").strip()
         location = ""
         caption = ""
@@ -266,17 +287,18 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
         date_str = now.strftime("%b %d, %Y")
         filename = f"exchange_{timestamp}.jpg"
 
-        # 1. Upload image to public/exchange/
+        # 1. Upload image to public/exchange/ (direct PUT without redundant GET)
         image_repo_path = f"public/exchange/{filename}"
-        upload_file_to_github(
+        await asyncio.to_thread(
+            upload_file_to_github,
             image_repo_path,
             optimized_bytes,
             f"Add exchange photo: {filename}",
         )
 
-        # 2. Update src/data/liveTravelDispatches.json
+        # 2. Update src/data/liveTravelDispatches.json using fetched SHA directly
         json_repo_path = "src/data/liveTravelDispatches.json"
-        dispatches, _ = get_file_from_github(json_repo_path)
+        dispatches, sha = await asyncio.to_thread(get_file_from_github, json_repo_path)
         if not isinstance(dispatches, list):
             dispatches = []
 
@@ -294,10 +316,12 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
         updated_json_bytes = json.dumps(dispatches, indent=2).encode("utf-8")
 
         commit_desc = location or caption or filename
-        upload_file_to_github(
+        await asyncio.to_thread(
+            upload_file_to_github,
             json_repo_path,
             updated_json_bytes,
             f"Update travel dispatch: {commit_desc}",
+            sha,
         )
 
         success_lines = ["🎉 **Published successfully to your Portfolio!**\n"]
@@ -328,7 +352,7 @@ def main():
     app.add_handler(CommandHandler("delete", delete_command))
     app.add_handler(MessageHandler(filters.PHOTO, handle_photo))
 
-    print("🤖 Telegram Exchange Bot is running with delete & caption support...")
+    print("🤖 Telegram Exchange Bot is running (Optimized for instant async uploads)...")
     app.run_polling()
 
 
