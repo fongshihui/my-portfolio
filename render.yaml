@@ -1,0 +1,20 @@
+services:
+  - type: worker
+    name: my-portfolio-telegram-bot
+    runtime: python
+    buildCommand: pip install -r sync-bot/requirements.txt
+    startCommand: python sync-bot/bot.py
+    autoDeploy: true
+    envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: ALLOWED_TELEGRAM_USER_ID
+        sync: false
+      - key: GITHUB_TOKEN
+        sync: false
+      - key: GITHUB_REPO_OWNER
+        value: fongshihui
+      - key: GITHUB_REPO_NAME
+        value: my-portfolio
+      - key: GITHUB_BRANCH
+        value: master

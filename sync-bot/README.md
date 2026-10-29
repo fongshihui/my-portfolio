@@ -53,6 +53,21 @@ This bot allows you to send photos directly from your phone on Telegram to autom
    python sync-bot/bot.py
    ```
 
+### Always-on deployment with Render
+
+The repository includes `render.yaml` for running the bot as a Render background worker.
+
+1. Push the repository to GitHub.
+2. In Render, choose **New → Blueprint** and select this repository.
+3. Add these secret environment variables when prompted:
+   - `TELEGRAM_BOT_TOKEN`
+   - `ALLOWED_TELEGRAM_USER_ID`
+   - `GITHUB_TOKEN`
+4. Confirm the service uses the `master` branch and deploy it.
+5. In the Render logs, confirm `Telegram Exchange Bot is running`.
+
+The worker must remain separate from the Vercel frontend. Render keeps the Telegram polling process alive, while GitHub commits from the bot continue to trigger Vercel deployments.
+
 ---
 
 ## 📱 How to Post
