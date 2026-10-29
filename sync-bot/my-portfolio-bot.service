@@ -1,0 +1,15 @@
+[Unit]
+Description=My Portfolio Telegram Exchange Bot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/my-portfolio
+ExecStart=/opt/my-portfolio/venv/bin/python sync-bot/bot.py
+Restart=always
+RestartSec=10
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target

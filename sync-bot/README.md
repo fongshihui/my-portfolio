@@ -68,6 +68,33 @@ The repository includes `render.yaml` for running the bot as a Render background
 
 The worker must remain separate from the Vercel frontend. Render keeps the Telegram polling process alive, while GitHub commits from the bot continue to trigger Vercel deployments.
 
+### Free always-on deployment with an Oracle Cloud VPS
+
+For a no-cost 24/7 bot, create an Oracle Cloud **Always Free** Ubuntu ARM instance. The VPS must be running continuously; Oracle may require account verification and has limited free capacity.
+
+On the VPS, install the bot and its service:
+
+```bash
+sudo apt update && sudo apt install -y git python3-venv
+sudo git clone https://github.com/fongshihui/my-portfolio.git /opt/my-portfolio
+cd /opt/my-portfolio
+python3 -m venv venv
+./venv/bin/pip install -r sync-bot/requirements.txt
+sudo nano sync-bot/.env
+sudo cp sync-bot/my-portfolio-bot.service /etc/systemd/system/my-portfolio-bot.service
+sudo systemctl daemon-reload
+sudo systemctl enable --now my-portfolio-bot
+```
+
+Set `TELEGRAM_BOT_TOKEN`, `ALLOWED_TELEGRAM_USER_ID`, and `GITHUB_TOKEN` in `/opt/my-portfolio/sync-bot/.env`. Check that it is running with:
+
+```bash
+sudo systemctl status my-portfolio-bot
+sudo journalctl -u my-portfolio-bot -f
+```
+
+The service restarts the bot after crashes and starts it again after VPS reboots. Keep `.env` only on the VPS; never commit it.
+
 ---
 
 ## 📱 How to Post
